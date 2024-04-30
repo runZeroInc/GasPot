@@ -285,8 +285,8 @@ while True:
             new_con.settimeout(30.0)
             active_sockets.append(new_con)
         else:
-            addr = conn.getpeername()
             try:
+                addr = conn.getpeername()
                 # get current time in UTC
                 TIME = datetime.datetime.utcnow()
                 # write out initial connection
@@ -422,6 +422,11 @@ while True:
                     # log what was entered
                     log("Attempt from: %s\n" % addr[0], log_destinations)
                     log("Command Entered %s\n" % response, log_destinations)
+            except OSError as OSerr:
+                print("Error in OS Call: {}".format(str(OSerr)))
+                active_sockets.remove(conn)
+                conn.close()
+                continue
             except Exception as e:
                 print('Unknown Error: {}'.format(str(e)))
                 raise
