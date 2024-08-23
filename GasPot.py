@@ -59,6 +59,19 @@ PRODUCT2 = config.get('products', 'product2').ljust(22)
 PRODUCT3 = config.get('products', 'product3').ljust(22)
 PRODUCT4 = config.get('products', 'product4').ljust(22)
 
+VERSION = config.get('software', 'version')
+SOFTWARE_NUM = config.get('software', 'number')
+S_MODULE = config.get('software', 's_module')
+SYSTEM_FEATURES = ''
+
+for feature in ast.literal_eval(config.get('software', 'features')):
+    SYSTEM_FEATURES = SYSTEM_FEATURES + '  ' + feature + '''
+'''
+
+PLDD = ''
+for pldd in ast.literal_eval(config.get('software', 'pldd')):
+    PLDD = PLDD + '  ' + pldd + '''
+'''
 
 
 # Create random Numbers for the volumes
@@ -255,6 +268,25 @@ TANK   PRODUCT                 STATUS
 '''
     return I20500_1 + str(TIME.strftime('%m/%d/%Y %H:%M')) + I20500_2
 
+def I90200():
+    I90200_1 = '''
+I90200
+'''
+
+    I90200_2 = '''
+SOFTWARE REVISION LEVEL
+VERSION ''' + VERSION + '''
+SOFTWARE# ''' + SOFTWARE_NUM + '''
+CREATED - ''' + str(TIME.strftime('%y. %m. %d. %H. %M')) + '''
+
+S-MODULE# ''' + S_MODULE + '''
+SYSTEM FEATURES:
+''' + SYSTEM_FEATURES + '''PLDD:
+''' + PLDD + '''
+'''
+
+    return I90200_1 + str(TIME.strftime('%m/%d/%Y %H:%M')) + I90200_2
+
 def log(mesg, destinations):
   now = datetime.datetime.utcnow()
   prefix = now.strftime('%m/%d/%Y %H:%M') + ': '
@@ -318,7 +350,7 @@ while True:
                     active_sockets.remove(conn)
                     continue
 
-                cmds = {"I20100" : I20100, "I20200" : I20200, "I20300" : I20300 , "I20400" : I20400, "I20500" : I20500}
+                cmds = {"I20100" : I20100, "I20200" : I20200, "I20300" : I20300 , "I20400" : I20400, "I20500" : I20500, "I90200": I90200}
                 if cmd in cmds:
                     log("Handling %s Command Attempt from: %s\n" % (cmd, addr[0]), log_destinations)
                     conn.send(cmds[cmd]().encode(errors='replace'))

@@ -57,3 +57,17 @@ min_vol = 1000
 max_vol = 9050
 min_ullage = 3000
 max_ullage = 9999
+
+[softare]
+version = 110.1
+number = 346110-101-B
+s_module = 330160-115-A
+features = [
+	'PERIODIC IN-TANK TESTS',
+	'ANNUAL IN-TANK TESTS',
+	'CSLD',
+	'BIR',
+	'FUEL MANAGER', ]
+pldd = [
+	'0.10 REPETITIV',
+	'0.20 REPETITIV', ]
